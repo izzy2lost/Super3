@@ -34,6 +34,18 @@
       android:textAppearance="?attr/textAppearanceBodyMedium"
       android:textColor="?attr/colorOnSurfaceVariant" />
 
+    <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/game_hint"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="6dp"
+      android:drawableStart="@drawable/lightbulb_hint"
+      android:drawablePadding="4dp"
+      android:gravity="center_vertical"
+      android:text="@string/games_list_hint"
+      android:textAppearance="?attr/textAppearanceLabelSmall"
+      android:textColor="?attr/colorOnSurfaceVariant" />
+
   </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

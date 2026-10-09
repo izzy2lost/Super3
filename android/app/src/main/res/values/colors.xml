@@ -30,6 +30,7 @@
   <color name="md_theme_outlineVariant">#C0C8CF</color>
 
   <color name="play_green">#39FF14</color>
+  <color name="hint_yellow">#FFC107</color>
 
   <color name="screenshot_backdrop">#22000000</color>
 </resources>

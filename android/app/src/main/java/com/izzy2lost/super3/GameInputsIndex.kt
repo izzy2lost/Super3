@@ -34,6 +34,19 @@ object GameInputsIndex {
         return false
     }
 
+    // Input types declared by the game, falling back to its parent's when it has none.
+    fun inputTypes(gamesXmlPath: String, gameName: String): Set<String>? {
+        val index = load(gamesXmlPath)
+        val visited = HashSet<String>(8)
+        var cur: String? = gameName
+        while (cur != null && visited.add(cur)) {
+            val def = index[cur] ?: return null
+            if (def.inputTypes.isNotEmpty()) return def.inputTypes
+            cur = def.parent
+        }
+        return null
+    }
+
     @Synchronized
     private fun load(gamesXmlPath: String): Map<String, GameInputs> {
         val existingPath = cachedFromPath

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="?attr/colorSurface"
+  android:fitsSystemWindows="true">
+
+  <com.google.android.material.appbar.MaterialToolbar
+    android:id="@+id/controls_toolbar"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:menu="@menu/menu_controls"
+    app:navigationIcon="@drawable/exit_to_app_24px"
+    app:navigationIconTint="?attr/colorOnPrimary"
+    app:title="Controller mapping"
+    app:titleTextColor="?attr/colorOnPrimary"
+    app:subtitleTextColor="?attr/colorOnPrimary" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/controls_list"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:clipToPadding="false"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="24dp"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/controls_toolbar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

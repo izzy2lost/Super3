@@ -216,14 +216,19 @@ class MainActivity : AppCompatActivity() {
         val btnGyroSteering: MaterialButton = headerView.findViewById(R.id.btn_gyro_steering)
         val btnGyroSensitivity: MaterialButton = headerView.findViewById(R.id.btn_gyro_sensitivity)
         val btnEditSupermodelIni: MaterialButton = headerView.findViewById(R.id.btn_edit_supermodel_ini)
+        val btnControllerMapping: MaterialButton = headerView.findViewById(R.id.btn_controller_mapping)
 
-        gamesAdapter = GamesAdapter { item ->
-            if (!item.launchable) {
-                Toast.makeText(this, item.status, Toast.LENGTH_SHORT).show()
-                return@GamesAdapter
-            }
-            launchGame(item.game)
-        }
+        gamesAdapter =
+            GamesAdapter(
+                onClick = { item ->
+                    if (item.launchable) {
+                        launchGame(item.game)
+                    } else {
+                        Toast.makeText(this, item.status, Toast.LENGTH_SHORT).show()
+                    }
+                },
+                onLongClick = { item -> showGameSettings(item.game) },
+            )
         gamesList.adapter = gamesAdapter
         searchResultsList.adapter = gamesAdapter
 
@@ -263,6 +268,11 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                 }
                 .show()
+        }
+
+        btnControllerMapping.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.START)
+            openControllerMapping(null)
         }
 
         bindVideoSettingsUi()
@@ -443,6 +453,35 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return null
+    }
+
+    private fun showGameSettings(game: GameDef) {
+        val options = arrayOf("Controller mapping")
+        MaterialAlertDialogBuilder(this)
+            .setTitle(game.displayName)
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openControllerMapping(game)
+                }
+            }
+            .show()
+    }
+
+    private fun openControllerMapping(game: GameDef?) {
+        val tree = userTreeUri
+        if (tree == null) {
+            Toast.makeText(this, "Pick a data folder first", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val intent =
+            Intent(this, ControlsMappingActivity::class.java).apply {
+                putExtra(IniEditorActivity.EXTRA_TREE_URI, tree.toString())
+                if (game != null) {
+                    putExtra(ControlsMappingActivity.EXTRA_GAME_NAME, game.name)
+                    putExtra(ControlsMappingActivity.EXTRA_GAME_TITLE, game.displayName)
+                }
+            }
+        startActivity(intent)
     }
 
     private fun showAboutDialog() {
@@ -1499,6 +1538,7 @@ private fun buildItems(games: List<GameDef>, zipDocs: Map<String, DocumentFile>,
 
 private class GamesAdapter(
     private val onClick: (GameItem) -> Unit,
+    private val onLongClick: (GameItem) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private const val VT_LIST = 1
@@ -1565,8 +1605,8 @@ private class GamesAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
-            is ListVH -> holder.bind(shownItems[position], onClick)
-            is FlyerGroupVH -> holder.bind(shownFlyerGroups[position], onClick)
+            is ListVH -> holder.bind(shownItems[position], onClick, onLongClick)
+            is FlyerGroupVH -> holder.bind(shownFlyerGroups[position], onClick, onLongClick)
         }
     }
 
@@ -1684,7 +1724,7 @@ private class GamesAdapter(
         private val title: TextView = itemView.findViewById(R.id.game_title)
         private val subtitle: TextView = itemView.findViewById(R.id.game_subtitle)
 
-        fun bind(item: GameItem, onClick: (GameItem) -> Unit) {
+        fun bind(item: GameItem, onClick: (GameItem) -> Unit, onLongClick: (GameItem) -> Unit) {
             title.text = item.game.displayName
             subtitle.text = item.status
             itemView.isEnabled = item.launchable
@@ -1692,6 +1732,10 @@ private class GamesAdapter(
             subtitle.isEnabled = item.launchable
             itemView.alpha = if (item.launchable) 1.0f else 0.5f
             itemView.setOnClickListener { onClick(item) }
+            itemView.setOnLongClickListener {
+                onLongClick(item)
+                true
+            }
         }
     }
 
@@ -1704,7 +1748,7 @@ private class GamesAdapter(
 
         private var showingBack = false
 
-        fun bind(group: FlyerGroup, onClick: (GameItem) -> Unit) {
+        fun bind(group: FlyerGroup, onClick: (GameItem) -> Unit, onLongClick: (GameItem) -> Unit) {
             title.text = group.title
 
             val density = itemView.resources.displayMetrics.density
@@ -1755,6 +1799,13 @@ private class GamesAdapter(
                 val click = View.OnClickListener { onClick(variant) }
                 row.setOnClickListener(click)
                 btnPlay.setOnClickListener(click)
+                val longClick =
+                    View.OnLongClickListener {
+                        onLongClick(variant)
+                        true
+                    }
+                row.setOnLongClickListener(longClick)
+                btnPlay.setOnLongClickListener(longClick)
 
                 variantsContainer.addView(row)
             }

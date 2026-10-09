@@ -213,6 +213,7 @@ void AndroidInputSystem::ApplyConfig(const Util::Config::Node& config)
   }
 
   m_gunAutoTrigger = config["InputAutoTrigger"].ValueAsDefault<unsigned>(0) != 0;
+  m_controllerShortcuts = config["AndroidControllerShortcuts"].ValueAsDefault<unsigned>(1) != 0;
 
   auto keySc = [&](const std::string& mapping, SDL_Scancode fallback) -> SDL_Scancode {
     if (mapping.empty()) return fallback;
@@ -454,6 +455,10 @@ void AndroidInputSystem::HandleControllerButtonEvent(const SDL_ControllerButtonE
 {
   // Controller buttons can be mapped in Supermodel.ini via JOY mappings, but we also
   // synthesize a few "touch-style" keys for convenience in the UI / test menu.
+  // Custom remaps (AndroidControllerShortcuts = 0) disable this so they aren't doubled up.
+  if (!m_controllerShortcuts)
+    return;
+
   DualScancode sc;
   switch (btn.button)
   {

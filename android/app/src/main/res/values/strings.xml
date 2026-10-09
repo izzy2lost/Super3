@@ -49,4 +49,5 @@
   <string name="theme_switch_to_light">Switch to light mode</string>
   <string name="theme_switch_to_dark">Switch to dark mode</string>
   <string name="open_menu">Open menu</string>
+  <string name="games_list_hint">Hold for per-game settings</string>
 </resources>

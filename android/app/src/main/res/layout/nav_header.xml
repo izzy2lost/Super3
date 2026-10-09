@@ -172,6 +172,15 @@
       android:text="Gyro sensitivity: Normal"
       style="?attr/materialButtonElevatedStyle" />
 
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/btn_controller_mapping"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:text="Controller mapping"
+      app:icon="@drawable/stadia_controller_24px"
+      style="?attr/materialButtonElevatedStyle" />
+
     <com.google.android.material.textview.MaterialTextView
       android:id="@+id/advanced_title"
       android:layout_width="match_parent"

@@ -29,8 +29,8 @@ android {
     minSdk = 26
     targetSdk = 36
 
-    versionCode = 22
-    versionName = "1.2.1"
+    versionCode = 23
+    versionName = "1.2.2"
 
     ndk {
       abiFilters += listOf("arm64-v8a")
@@ -85,6 +85,12 @@ android {
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+  }
+}
+
+kotlin {
+  compilerOptions {
+    jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
   }
 }
 

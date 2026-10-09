@@ -180,6 +180,10 @@ private:
   DualScancode m_touchSkiSelect1{SDL_SCANCODE_Q, SDL_SCANCODE_UNKNOWN};
   DualScancode m_touchSkiSelect2{SDL_SCANCODE_W, SDL_SCANCODE_UNKNOWN};
 
+  // When false, physical controller Start/Back/Guide/D-pad no longer synthesize
+  // keyboard presses, so only the JOY mappings in Supermodel.ini apply.
+  bool m_controllerShortcuts = true;
+
   bool m_gunTouchEnabled = false;
   bool m_gunStickAimEnabled = false;
   uint32_t m_lastGunAimTickMs = 0;
